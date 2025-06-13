@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { error } = require("pdf-lib");
 
 // Middleware to verify JWT token
 function requireAuth(req, res, next) {
