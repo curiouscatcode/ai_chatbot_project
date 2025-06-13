@@ -38,10 +38,21 @@ router.post("/register", async (req, res) => {
       [email, hashedPassword]
     );
 
-    // 6. response
+    // 6. Generate token after user created
+    const token = jwt.sign(
+      {
+        userId: newUser.rows[0].id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    // 7. Send response with token
     res.status(201).json({
-      message: "User created successfully !",
-      user: newUser.rows[0],
+      message: "User created successfully!",
+      token: token,
     });
   } catch (err) {
     console.error(err);
@@ -95,7 +106,7 @@ router.post("/login", async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "60d",
+        expiresIn: "7d",
       }
     );
 
