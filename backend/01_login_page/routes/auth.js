@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const pool = require("../db");
 const requireAuth = require("../middleware/requireAuth");
-const { error } = require("pdf-lib");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 require("dotenv").config();
 
