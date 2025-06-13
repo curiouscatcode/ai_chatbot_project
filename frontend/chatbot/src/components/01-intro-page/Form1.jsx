@@ -51,7 +51,7 @@ const Form1 = ({ type }) => {
         alert("Login successful !");
         // 7. redirection to the dashboard
         navigate("/dashboard");
-      } else if (type === "register") {
+      } else {
         localStorage.setItem("token", data.token);
         alert("User registered successfully!");
         navigate("/dashboard");
