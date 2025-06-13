@@ -303,29 +303,6 @@ const Dashboard = () => {
     }
   };
 
-  // // dynamically adding chats on left sidebar
-  // {
-  //   chats && chats.length > 0 ? (
-  //     chats.map((item) => (
-  //       <p
-  //         key={item.id}
-  //         className={`bg-gray-400 p-2 mb-3 rounded text-white font-bold cursor-pointer ${
-  //           currentChatId === item.id ? "bg-gray-600" : ""
-  //         }`}
-  //         onClick={() => {
-  //           setCurrentChatId(item.id); // ✅ set the current chatId
-  //           fetchMessages(item.id); // ✅ load that chat’s messages (see next step)
-  //         }}
-  //         onContextMenu={(e) => handleContextMenu(e, item)} // Pass the event and the chat item
-  //       >
-  //         {item.title}
-  //       </p>
-  //     ))
-  //   ) : (
-  //     <p className="text-sm text-gray-500">No chats yet 🥺</p>
-  //   );
-  // }
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");

@@ -38,6 +38,8 @@ const Form1 = ({ type }) => {
       // 4. storing response in json
       const data = await res.json();
 
+      console.log(data);
+
       // 5. edge case
       if (!res.ok) {
         alert(data.error || "Something went wrong");
