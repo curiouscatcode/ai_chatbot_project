@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@layer utilities {
+  @keyframes snowfall {
+    0% {
+      transform: translateY(-10%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(800%);
+      opacity: 0.3;
+    }
+  }
+
+  .animate-snow {
+    animation: snowfall 9s linear infinite;
+  }
+}
+
+@layer utilities {
+  .loader::before {
+    content: "";
+    position: absolute;
+    inset: auto calc(50% - 17px) 0;
+    height: 50px;
+    --g: no-repeat linear-gradient(#ff4e4e 0 0);
+    background: var(--g), var(--g), var(--g), var(--g);
+    background-size: 16px 14px;
+    animation: move 2s infinite linear, move2 2s infinite linear;
+  }
+
+  @keyframes move {
+    0%,
+    100% {
+      background-position: 0 -50px, 100% -50px;
+    }
+
+    17.5% {
+      background-position: 0 100%, 100% -50px, 0 -50px, 100% -50px;
+    }
+
+    35% {
+      background-position: 0 100%, 100% 100%, 0 -50px, 100% -50px;
+    }
+
+    52.5% {
+      background-position: 0 100%, 100% 100%, 0 calc(100% - 16px), 100% -50px;
+    }
+
+    70%,
+    98% {
+      background-position: 0 100%, 100% 100%, 0 calc(100% - 16px),
+        100% calc(100% - 16px);
+    }
+  }
+
+  @keyframes move2 {
+    0%,
+    70% {
+      transform: translate(0);
+    }
+
+    100% {
+      transform: translate(200%);
+    }
+  }
+}
+
+.context-menu {
+  position: absolute;
+  background-color: #333;
+  border: 1px solid #555;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  min-width: 150px;
+  overflow: hidden;
+  padding: 5px 0;
+}
+
+.context-menu-item {
+  padding: 8px 15px;
+  color: #eee;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
+}
+
+.context-menu-item:hover {
+  background-color: #555;
+  color: #fff;
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  table-layout: fixed;
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid #4a5568;
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.markdown-content th {
+  background-color: #e2e8f0;
+  font-weight: bold;
+}
+
+@theme {
+  --animate-fade-in-scale: fade-in-scale 0.3s ease-out;
+  @keyframes fade-in-scale {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  --animate-red-border-lightning: redBorderLightning 2s ease-in-out infinite;
+  @keyframes redBorderLightning {
+    0%,
+    100% {
+      box-shadow: 0 0 5px 2px rgba(200, 38, 38, 0);
+    }
+    10% {
+      box-shadow: 0 0 10px 2px rgba(220, 38, 38, 0.6),
+        0 0 5px 1px rgba(255, 0, 0, 0.4);
+    }
+    30% {
+      box-shadow: 0 0 25px 8px rgba(248, 113, 113, 0.9),
+        0 0 35px 12px rgba(255, 0, 0, 0.7),
+        0 0 45px 15px rgba(255, 100, 100, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 15px 4px rgba(220, 38, 38, 0.7),
+        0 0 25px 8px rgba(255, 0, 0, 0.5);
+    }
+    70% {
+      box-shadow: 0 0 30px 10px rgba(248, 113, 113, 0.8),
+        0 0 40px 15px rgba(255, 0, 0, 0.6);
+    }
+  }
+}
