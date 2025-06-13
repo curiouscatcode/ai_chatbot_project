@@ -24,13 +24,16 @@ const Form1 = ({ type }) => {
     // try & catch
     try {
       // 3. fetch Api and its 2 arguments
-      const res = await fetch(`http://localhost:5000/auth/${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        `https://ai-chatbot-project-3.onrender.com/auth/${endpoint}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       // 4. storing response in json
       const data = await res.json();

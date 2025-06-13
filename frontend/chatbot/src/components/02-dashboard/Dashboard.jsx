@@ -76,7 +76,7 @@ const Dashboard = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/auth/chats/${selectedChatForMenu.id}`,
+        `https://ai-chatbot-project-3.onrender.com/auth/chats/${selectedChatForMenu.id}`,
         {
           method: "PUT",
           headers: {
@@ -137,7 +137,7 @@ const Dashboard = () => {
       setError(null); // Clear previous errors
       setMessages([]); // Clear current messages while loading new chat
       const res = await fetch(
-        `http://localhost:5000/auth/chats/${chatId}/messages`,
+        `https://ai-chatbot-project-3.onrender.com/auth/chats/${chatId}/messages`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -161,11 +161,14 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchAllChatsAndSetInitial = async () => {
       try {
-        const res = await fetch("http://localhost:5000/auth/chats", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const res = await fetch(
+          "https://ai-chatbot-project-3.onrender.com/auth/chats",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         if (!res.ok) {
           const errorData = await res.json();
           throw new Error(errorData.message || "Failed to fetch chat list.");
@@ -199,14 +202,17 @@ const Dashboard = () => {
     try {
       setError(null); // Clear previous errors
       setIsLoading(true); // Indicate loading for new chat creation
-      const res = await fetch("http://localhost:5000/auth/chat/new", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ title: "New Chat" }),
-      });
+      const res = await fetch(
+        "https://ai-chatbot-project-3.onrender.com/auth/chat/new",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ title: "New Chat" }),
+        }
+      );
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -247,17 +253,20 @@ const Dashboard = () => {
       setIsLoading(true);
       // 1. call the backend api with user's message
       // fetch has two arguments: (link, data)
-      const response = await fetch("http://localhost:5000/auth/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          prompt: newUserMessage.text,
-          chatId: currentChatId, // Ensure this is always set from state
-        }),
-      });
+      const response = await fetch(
+        "https://ai-chatbot-project-3.onrender.com/auth/chat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            prompt: newUserMessage.text,
+            chatId: currentChatId, // Ensure this is always set from state
+          }),
+        }
+      );
 
       // edge case
       if (!response.ok) {
@@ -341,7 +350,7 @@ const Dashboard = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/auth/chats/${selectedChatForMenu.id}`,
+        `https://ai-chatbot-project-3.onrender.com/auth/chats/${selectedChatForMenu.id}`,
         {
           method: "DELETE", // Specify DELETE method
           headers: {

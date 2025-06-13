@@ -9,8 +9,8 @@ const MainComponent = () => {
     e.preventDefault();
 
     const url = isLogin
-      ? "http://localhost:5000/auth/login"
-      : "http://localhost:5000/auth/register";
+      ? "https://ai-chatbot-project-3.onrender.com/auth/login"
+      : "https://ai-chatbot-project-3.onrender.com/auth/register";
 
     const body = {
       email,

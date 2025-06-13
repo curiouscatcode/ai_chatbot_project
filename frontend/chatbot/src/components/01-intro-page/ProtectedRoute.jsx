@@ -16,13 +16,16 @@ const ProtectedRoute = () => {
 
       // If a token exists, validate it with the backend
       try {
-        const response = await fetch("http://localhost:5000/auth/dashboard", {
-          method: "GET", // Use GET for simply checking status/fetching dashboard data
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Send the token for validation
-          },
-        });
+        const response = await fetch(
+          "https://ai-chatbot-project-3.onrender.com/auth/dashboard",
+          {
+            method: "GET", // Use GET for simply checking status/fetching dashboard data
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Send the token for validation
+            },
+          }
+        );
 
         // Check if the response was successful (HTTP status 200-299)
         if (response.ok) {
