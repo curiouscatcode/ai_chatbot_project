@@ -68,7 +68,7 @@ const Form1 = ({ type }) => {
         {/* email */}
         <label
           htmlFor="email"
-          className="text-sm font-medium block pl-4 pt-6 pb-1.5"
+          className="text-sm font-medium block pt-6 pb-1.5"
         >
           Email
         </label>
@@ -79,12 +79,12 @@ const Form1 = ({ type }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           id={`email-${type}`}
-          className="border border-gray-300 rounded px-2 py-1 m-0.5 ml-4.5"
+          className="border border-gray-300 rounded px-2 py-1 w-full"
         />
         {/* Password */}
         <label
           htmlFor="password"
-          className="text-sm font-medium block pl-4 pt-8 pb-1.5"
+          className="text-sm font-medium block pt-8 pb-1.5"
         >
           Password
         </label>
@@ -96,13 +96,13 @@ const Form1 = ({ type }) => {
           placeholder="Enter password"
           name="password"
           id={`password-${type}`}
-          className="border border-gray-300 rounded px-2 py-1 m-0.5 ml-4.5"
+          className="border border-gray-300 rounded px-2 py-1 w-full"
         />
-        <div className="mt-7 flex justify-center">
+        <div className="mt-7 flex justify-start">
           {/* submit button */}
           <button
             type="submit"
-            className="bg-fuchsia-500 text-white rounded-xl px-4 py-2 hover:bg-fuchsia-600 cursor-pointer font-bold"
+            className="bg-fuchsia-500 text-white rounded-xl px-4 py-2 hover:bg-fuchsia-600 cursor-pointer font-bold w-full md:w-auto"
           >
             {type === "login" ? "LogIn" : "SignIn"}
           </button>

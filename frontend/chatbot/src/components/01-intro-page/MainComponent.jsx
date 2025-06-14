@@ -45,14 +45,21 @@ const MainComponent = () => {
 
   return (
     <>
-      <div className="full-div flex gap-4 min-h-screen items-center justify-center bg-gradient-to-tl from-black from-60% to-red-800 ">
-        <div className="main-div relative flex gap-0 w-lg justify-center px-20 py-10 rounded-b-3xl bg-gradient-to-b from-indigo-900 via-purple-900 to-black animate-red-border-lightning hover:scale-105 transition-transform duration-300 ">
-          <div className="pr-4 p-2 rounded-bl-3xl bg-teal-700/10 text-teal-200">
+      <div className="full-div flex gap-4 min-h-screen items-center justify-center bg-gradient-to-tl from-black from-60% to-red-800 p-4">
+        <div
+          className="main-div relative flex flex-col md:flex-row gap-4 
+            w-full max-w-md sm:max-w-xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl 
+            justify-center py-6 px-4 rounded-xl md:rounded-b-3xl 
+            bg-gradient-to-b from-indigo-900 via-purple-900 to-black 
+            animate-red-border-lightning hover:scale-105 transition-transform duration-300 shadow-xl 
+            mb-8 md:mb-0 md:items-start"
+        >
+          <div className="rounded-xl  md:rounded-bl-3xl bg-teal-700/10 text-teal-200 w-full md:w-auto p-4">
             <Titles heading={"Register"} />
             <Form1 type={"register"} />
             <Snowfall />
           </div>
-          <div className="log-in bg-teal-700/10 pr-4 p-2 rounded-br-3xl text-teal-200">
+          <div className="log-in bg-teal-700/10 rounded-xl md:rounded-br-3xl text-teal-200 w-full md:w-auto p-4">
             <Titles heading={"login"} />
             <Form1 type={"login"} />
           </div>

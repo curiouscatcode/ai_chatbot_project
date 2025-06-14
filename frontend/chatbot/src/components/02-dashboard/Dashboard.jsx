@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef } from "react"; // Removed useContext as it's not used
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,9 @@ const Dashboard = () => {
   // state for chats
   const [chats, setChats] = useState([]);
 
+  // --- NEW STATE FOR MOBILE SIDEBAR VISIBILITY ---
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   // New state for context menu
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
@@ -28,16 +31,13 @@ const Dashboard = () => {
   });
   const [selectedChatForMenu, setSelectedChatForMenu] = useState(null); // Stores the chat object right-clicked
 
-  // --- ADD THIS handleContextMenu FUNCTION ---
   const handleContextMenu = (e, chat) => {
-    console.log("Right-click event triggered on chat:", chat.title, e); // <-- ADD THIS LINE
     e.preventDefault(); // Prevent the default browser context menu
     setSelectedChatForMenu(chat);
     setContextMenuPosition({ x: e.clientX, y: e.clientY });
     setShowContextMenu(true);
   };
 
-  // --- ADD THIS useEffect to close context menu on outside click ---
   useEffect(() => {
     const handleClickOutside = () => {
       if (showContextMenu) {
@@ -53,23 +53,19 @@ const Dashboard = () => {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [showContextMenu]); // Dependency array: re-run this effect when showContextMenu changes
+  }, [showContextMenu]);
 
-  // Rename function
   const handleRenameTitle = async () => {
     if (!selectedChatForMenu) return; // Safeguard
 
-    // Hide the context menu immediately
-    setShowContextMenu(false);
+    setShowContextMenu(false); // Hide the context menu immediately
 
-    // Use the built-in prompt for quick testing. For better UX, you might use a modal later.
     const newTitle = prompt(
       "Enter new title for the chat:",
       selectedChatForMenu.title
     );
 
     if (newTitle === null || newTitle.trim() === "") {
-      // User cancelled the prompt or entered an empty/whitespace-only title
       console.log("Rename cancelled or empty title entered.");
       return;
     }
@@ -83,7 +79,7 @@ const Dashboard = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({ newTitle: newTitle.trim() }), // Send the trimmed new title
+          body: JSON.stringify({ newTitle: newTitle.trim() }),
         }
       );
 
@@ -92,10 +88,9 @@ const Dashboard = () => {
         throw new Error(errorData.message || "Failed to rename chat.");
       }
 
-      const data = await response.json(); // Backend sends back { message, chat: { id, title } }
+      const data = await response.json();
       console.log("Chat renamed successfully:", data.chat);
 
-      // Update the frontend state to reflect the new title
       setChats((prevChats) =>
         prevChats.map((chat) =>
           chat.id === selectedChatForMenu.id
@@ -104,38 +99,30 @@ const Dashboard = () => {
         )
       );
 
-      setError(null); // Clear any previous error messages
+      setError(null);
     } catch (err) {
       console.error("Error renaming chat:", err);
       setError(
         err.message || "An unexpected error occurred while renaming chat."
       );
     } finally {
-      setSelectedChatForMenu(null); // Clear selected chat after operation
+      setSelectedChatForMenu(null);
     }
   };
 
-  // console.log(messages);
-  // console.log(setMessages);
-  // handleSendMessage
-
-  // Create bottomRef to create the reference for latest message so that we can use useEffect() to scroll to latest message.
   const bottomRef = useRef(null);
 
-  // useEffect to scroll whenever messages update
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
-  // 1. create a new chat and store the chatId
-  // NEW: Function to fetch messages for a specific chat
   const fetchMessages = async (chatId) => {
-    if (!chatId) return; // Prevent fetching for null or undefined chatId
+    if (!chatId) return;
     try {
-      setError(null); // Clear previous errors
-      setMessages([]); // Clear current messages while loading new chat
+      setError(null);
+      setMessages([]);
       const res = await fetch(
         `https://ai-chatbot-project-3.onrender.com/auth/chats/${chatId}/messages`,
         {
@@ -156,8 +143,6 @@ const Dashboard = () => {
     }
   };
 
-  // For loading chat history
-  // 1. Initial Load: Fetch all chats and set an initial currentChatId
   useEffect(() => {
     const fetchAllChatsAndSetInitial = async () => {
       try {
@@ -176,14 +161,11 @@ const Dashboard = () => {
         const data = await res.json();
         setChats(data.chats);
 
-        // If there are existing chats, load the most recent one (first in list)
-        // or a default if you prefer
         if (data.chats.length > 0) {
-          const latestChatId = data.chats[0].id; // Assuming latest is first due to ORDER BY DESC
+          const latestChatId = data.chats[0].id;
           setCurrentChatId(latestChatId);
-          await fetchMessages(latestChatId); // Load messages for this chat
+          await fetchMessages(latestChatId);
         } else {
-          // If no chats exist, automatically create a new one
           await createNewChat();
         }
       } catch (err) {
@@ -195,13 +177,12 @@ const Dashboard = () => {
       }
     };
     fetchAllChatsAndSetInitial();
-  }, []); // Run once on component mount
+  }, []);
 
-  // 2. Create a new chat and store the chatId
   const createNewChat = async () => {
     try {
-      setError(null); // Clear previous errors
-      setIsLoading(true); // Indicate loading for new chat creation
+      setError(null);
+      setIsLoading(true);
       const res = await fetch(
         "https://ai-chatbot-project-3.onrender.com/auth/chat/new",
         {
@@ -220,39 +201,34 @@ const Dashboard = () => {
       }
 
       const data = await res.json();
-      setChats([data.chat, ...chats]); // Add new chat to the top of the list
-      setCurrentChatId(data.chat.id); // IMPORTANT: Use data.chat.id, not _id as _id is from MongoDB
-      setMessages([]); // Clear chat area for the new chat
+      setChats([data.chat, ...chats]);
+      setCurrentChatId(data.chat.id);
+      setMessages([]);
     } catch (err) {
       console.error("Chat creation failed:", err);
       setError(err.message || "Failed to create a new chat.");
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
+      if (window.innerWidth < 768) {
+        setIsSidebarOpen(false);
+      }
     }
   };
 
   const handleSendMessage = async () => {
-    // prevent sending empty array
     if (currentInput.trim() === "") return;
 
-    // 1. Add user message to message sender: object
     const newUserMessage = { sender: "user", text: currentInput };
-    // update the function
     setMessages((prevMessages) => {
       return [...prevMessages, newUserMessage];
     });
 
-    // 2. Clear the input field
     setCurrentInput("");
 
-    setError(null); // clear any previous errors
-    // 3. (Next step) call your backend API to get a gemini response
+    setError(null);
 
     try {
-      // 0. show a loading animation
       setIsLoading(true);
-      // 1. call the backend api with user's message
-      // fetch has two arguments: (link, data)
       const response = await fetch(
         "https://ai-chatbot-project-3.onrender.com/auth/chat",
         {
@@ -263,12 +239,11 @@ const Dashboard = () => {
           },
           body: JSON.stringify({
             prompt: newUserMessage.text,
-            chatId: currentChatId, // Ensure this is always set from state
+            chatId: currentChatId,
           }),
         }
       );
 
-      // edge case
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
@@ -276,15 +251,12 @@ const Dashboard = () => {
         );
       }
 
-      // turn off loading animation
       setIsLoading(false);
-      const data = await response.json(); // Parse the JSON response from the backend
-      const botMessage = { sender: "bot", text: data.reply }; // Extract the bot's reply from the response
+      const data = await response.json();
+      const botMessage = { sender: "bot", text: data.reply };
 
-      // Add the bot's message to the chat history
       setMessages((prevMessages) => [...prevMessages, botMessage]);
 
-      // New logic to display the auto-generated title
       if (data.newChatTitle && currentChatId) {
         setChats((prevChats) =>
           prevChats.map((chat) =>
@@ -293,13 +265,11 @@ const Dashboard = () => {
               : chat
           )
         );
-        console.log("Chat title updated in frontend state:", data.newChatTitle); // Debug log for frontend
+        console.log("Chat title updated in frontend state:", data.newChatTitle);
       }
     } catch (err) {
-      console.error("API call error:", err); // Log the error to console
-      setError(err.message || "An unexpected error occurred."); // Set error state to display in UI
-      // You might want to remove the user's last message if the bot failed to respond
-      // setMessages(prevMessages => prevMessages.slice(0, -1));
+      console.error("API call error:", err);
+      setError(err.message || "An unexpected error occurred.");
     }
   };
 
@@ -309,27 +279,26 @@ const Dashboard = () => {
   };
 
   const handleDeleteChat = async () => {
-    if (!selectedChatForMenu) return; // Safeguard
+    if (!selectedChatForMenu) return;
 
-    // 1. Ask for user confirmation
     const isConfirmed = window.confirm(
       `Are you sure you want to delete "${selectedChatForMenu.title}" and all its messages? This cannot be undone.`
     );
 
     if (!isConfirmed) {
-      setShowContextMenu(false); // Hide menu if user cancels
-      setSelectedChatForMenu(null); // Clear selected chat
-      return; // Exit if user cancels
+      setShowContextMenu(false);
+      setSelectedChatForMenu(null);
+      return;
     }
 
-    setShowContextMenu(false); // Hide the context menu immediately after confirmation
-    setIsLoading(true); // Show loading spinner
+    setShowContextMenu(false);
+    setIsLoading(true);
 
     try {
       const response = await fetch(
         `https://ai-chatbot-project-3.onrender.com/auth/chats/${selectedChatForMenu.id}`,
         {
-          method: "DELETE", // Specify DELETE method
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -345,107 +314,141 @@ const Dashboard = () => {
       const data = await response.json();
       console.log("Chat deleted successfully:", data.deletedChatId);
 
-      // 2. Update frontend state to remove the deleted chat
       setChats((prevChats) =>
         prevChats.filter((chat) => chat.id !== selectedChatForMenu.id)
       );
 
-      // 3. Handle active chat selection after deletion
       if (currentChatId === selectedChatForMenu.id) {
-        // If the deleted chat was currently active, clear messages and select another chat
-        setMessages([]); // Clear chat display
+        setMessages([]);
         const remainingChats = chats.filter(
           (chat) => chat.id !== selectedChatForMenu.id
         );
         if (remainingChats.length > 0) {
-          // Select the first remaining chat (or any other logic, e.g., most recent)
           setCurrentChatId(remainingChats[0].id);
-          fetchMessages(remainingChats[0].id); // Load messages for the newly selected chat
+          fetchMessages(remainingChats[0].id);
         } else {
-          // If no chats left, set currentChatId to null and potentially create a new one
           setCurrentChatId(null);
-          // Optionally, automatically create a new chat if all are deleted
-          // await createNewChat(); // You can uncomment this if you want a new chat always to appear
         }
       }
+      if (window.innerWidth < 768) {
+        setIsSidebarOpen(false);
+      }
 
-      setError(null); // Clear any previous error messages
+      setError(null);
     } catch (err) {
       console.error("Error deleting chat:", err);
       setError(
         err.message || "An unexpected error occurred while deleting chat."
       );
     } finally {
-      setIsLoading(false); // Hide loading spinner
-      setSelectedChatForMenu(null); // Clear selected chat after operation
+      setIsLoading(false);
+      setSelectedChatForMenu(null);
     }
   };
 
   return (
-    <div className="flex h-screen w-screen">
-      <>
-        {/* Sidebar */}
-        <div className="w-64 h-full bg-gradient-to-tl from-slate-400 from-10% via-slate-300 via-30% to-gray-200 to-90% font-bold text-red-500 flex flex-col justify-between">
-          <button
-            className="w-full text-2xl py-2 rounded mb-8 mt-10 text-red-600 
-                  [background-image:linear-gradient(to_right,_#f0abfc,_#f9a8d4,_#fecaca)]
-                  [background-size:200%_200%] [background-position:left_center]
-                  transition-[background-position] duration-1000 ease-in-out 
-                  hover:[background-position:right_center] cursor-pointer"
-            onClick={createNewChat}
-          >
-            + New Chat
-          </button>
-          <div className="flex-1 overflow-y-auto px-4 space-y-2 cursor-pointer">
-            <div className="flex-1 overflow-y-auto px-4 space-y-2 cursor-pointer">
-              {chats && chats.length > 0 ? (
-                chats.map((item) => (
-                  <p
-                    key={item.id} // from postgres
-                    className={`p-2 mb-3 rounded text-white font-bold cursor-pointer ${
-                      currentChatId === item.id ? "bg-gray-600" : "bg-gray-400"
-                    }`} // Apply active styling
-                    onClick={() => {
-                      setCurrentChatId(item.id); // Set the current chatId
-                      fetchMessages(item.id); // Load that chat’s messages
-                    }}
-                    onContextMenu={(e) => handleContextMenu(e, item)}
-                  >
-                    {item.title}
-                  </p>
-                ))
-              ) : (
-                <p className="text-sm text-gray-500">No chats yet 🥺</p>
-              )}
-            </div>
-          </div>
-          <button
-            className="w-full text-2xl py-2 rounded mb-8 text-red-600 
-                  [background-image:linear-gradient(to_right,_#f0abfc,_#f9a8d4,_#fecaca)]
-                  [background-size:200%_200%] [background-position:left_center]
-                  transition-[background-position] duration-1000 ease-in-out 
-                  hover:[background-position:right_center] cursor-pointer"
-            onClick={handleLogout}
-          >
-            LogOut
-          </button>
+    <div className="flex h-screen w-screen overflow-hidden">
+      {/* --- Sidebar --- */}
+      {/* PINPOINT FIX 1: Ensure sidebar is h-screen and flex-col */}
+      <div
+        className={`
+          w-64 h-screen bg-gradient-to-tl from-slate-400 from-10% via-slate-300 via-30% to-gray-200 to-90%
+          font-bold text-red-500 flex flex-col  
+          fixed top-0 left-0 z-40 transform transition-transform duration-300
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          md:relative md:translate-x-0 md:flex
+        `}
+      >
+        <button
+          className="w-full text-2xl py-2 rounded mt-10 mb-4 text-red-600
+                     [background-image:linear-gradient(to_right,_#f0abfc,_#f9a8d4,_#fecaca)]
+                     [background-size:200%_200%] [background-position:left_center]
+                     transition-[background-position] duration-1000 ease-in-out
+                     hover:[background-position:right_center] cursor-pointer"
+          onClick={createNewChat}
+        >
+          + New Chat
+        </button>
+        <div className="overflow-y-auto flex-grow px-4 space-y-2 cursor-pointer">
+          {chats && chats.length > 0 ? (
+            chats.map((item) => (
+              <p
+                key={item.id}
+                className={`p-2 mb-3 rounded text-white font-bold cursor-pointer ${
+                  currentChatId === item.id ? "bg-gray-600" : "bg-gray-400"
+                }`}
+                onClick={() => {
+                  setCurrentChatId(item.id);
+                  fetchMessages(item.id);
+                  setIsSidebarOpen(false);
+                }}
+                onContextMenu={(e) => handleContextMenu(e, item)}
+              >
+                {item.title}
+              </p>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500">No chats yet 🥺</p>
+          )}
         </div>
-      </>
+        <button
+          className="w-full text-2xl py-2 rounded my-4 text-red-600 mt-auto
+               [background-image:linear-gradient(to_right,_#f0abfc,_#f9a8d4,_#fecaca)]
+               [background-size:200%_200%] [background-position:left_center]
+               transition-[background-position] duration-1000 ease-in-out
+               hover:[background-position:right_center] cursor-pointer"
+          onClick={handleLogout}
+        >
+          LogOut
+        </button>
+      </div>
+
+      {/* --- Overlay for Mobile Sidebar --- */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
 
       {/* Chat area */}
-      <div className="flex-1 flex flex-col ">
+      <div className="flex-1 flex flex-col z-20">
+        {/* --- Mobile Menu Button (Hamburger) --- */}
+        <div className="md:hidden flex items-center p-4 bg-white border-b shadow-sm">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md p-2"
+          >
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+          <h1 className="text-lg font-semibold text-gray-800 ml-4">
+            AI Chatbot
+          </h1>
+        </div>
+
         {/* Chat display */}
         <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-gray-100">
           {messages.map((msg, index) => (
             <div
-              key={index} // In a real app, we will use a uniqueId from the backend, but index is okay for now
+              key={index}
               className={`p-3 rounded max-w-md ${
                 msg.sender === "user"
                   ? "self-end bg-blue-200 ml-auto"
                   : "self-start bg-gray-300 mr-auto"
               }`}
             >
-              {/* Use ReactMarkdown for bot messages, plain text for user messages */}
               {msg.sender === "bot" ? (
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {msg.text}
@@ -456,11 +459,9 @@ const Dashboard = () => {
             </div>
           ))}
           {error && (
-            // Display error message if state is set
             <div className="text-red-500 text-center mt-2">{error}</div>
           )}
 
-          {/*  loading animation */}
           {isLoading && (
             <div className="p-3 rounded max-w-md self-start bg-gray-300 mr-auto animate-pulse text-gray-700">
               <div className="loader w-[100px] h-[20px] shadow-[0_3px_0_#ff7272] relative clip-path-[inset(-40px_0_-5px)]" />
@@ -476,16 +477,15 @@ const Dashboard = () => {
             type="text"
             placeholder="Type your prompt..."
             className="flex-1 border rounded px-4 py-2 resize-none overflow-hidden"
-            value={currentInput} // display current state
+            value={currentInput}
             onChange={(e) => {
-              // update state on change
               setCurrentInput(e.target.value);
               e.target.style.height = "auto";
               e.target.style.height = `${e.target.scrollHeight}px`;
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault(); // prevent new line on enter
+                e.preventDefault();
                 handleSendMessage();
               }
             }}
@@ -504,12 +504,11 @@ const Dashboard = () => {
         <div
           className="context-menu"
           style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
-          onClick={(e) => e.stopPropagation()} // Important to prevent immediate re-closing
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="context-menu-item" onClick={handleRenameTitle}>
             Rename Title
           </div>
-          {/* Delete option will go here later */}
           <div className="context-menu-item" onClick={handleDeleteChat}>
             Delete Chat
           </div>
