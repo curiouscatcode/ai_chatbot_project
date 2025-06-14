@@ -349,7 +349,6 @@ const Dashboard = () => {
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       {/* --- Sidebar --- */}
-      {/* PINPOINT FIX 1: Ensure sidebar is h-screen and flex-col */}
       <div
         className={`
           w-64 h-screen bg-gradient-to-tl from-slate-400 from-10% via-slate-300 via-30% to-gray-200 to-90%
