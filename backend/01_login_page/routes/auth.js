@@ -64,6 +64,8 @@ router.post("/register", async (req, res) => {
 
 // POST /login (Checking for login)
 router.post("/login", async (req, res) => {
+  console.log("Login hit");
+  res.status(200).json({ message: "Backend is alive" });
   // 1. req.body: destructuring
   const { email, password } = req.body;
 
