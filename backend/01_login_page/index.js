@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const pool = require("./db");
 const cors = require("cors");
-// app.use(cors());
+app.use(cors());
 
 app.use(
   cors({
