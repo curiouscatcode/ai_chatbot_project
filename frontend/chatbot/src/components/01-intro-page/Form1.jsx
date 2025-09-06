@@ -25,7 +25,7 @@ const Form1 = ({ type }) => {
     try {
       // 3. fetch Api and its 2 arguments
       const res = await fetch(
-        `https://ai-chatbot-project-3.onrender.com/auth/${endpoint}`,
+        `https://ai-chatbot-project-new-deployment-4.onrender.com/auth/${endpoint}`,
         {
           method: "POST",
           headers: {
