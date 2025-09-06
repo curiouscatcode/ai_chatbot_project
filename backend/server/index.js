@@ -5,15 +5,6 @@ const pool = require("./db");
 const cors = require("cors");
 // app.use(cors());
 
-// app.use(
-//   cors({
-//     origin:
-//       "https://684d4ae8f9b8ab379ab05064--relaxed-salamander-50b4a5.netlify.app",
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//     credentials: true, // optional if using cookies
-//   })
-// );
-
 const allowedOrigins = ["https://relaxed-salamander-50b4a5.netlify.app"];
 
 app.use(
