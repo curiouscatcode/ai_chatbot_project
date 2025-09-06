@@ -14,10 +14,7 @@ const cors = require("cors");
 //   })
 // );
 
-const allowedOrigins = [
-  "https://relaxed-salamander-50b4a5.netlify.app",
-  "https://another-frontend-url.netlify.app", // optional, multiple URLs
-];
+const allowedOrigins = ["https://relaxed-salamander-50b4a5.netlify.app"];
 
 app.use(
   cors({
