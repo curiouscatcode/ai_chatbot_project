@@ -14,6 +14,26 @@ app.use(cors());
 //   })
 // );
 
+const allowedOrigins = [
+  "https://relaxed-salamander-50b4a5.netlify.app",
+  "https://another-frontend-url.netlify.app", // optional, multiple URLs
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow Postman / server requests
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg =
+          "The CORS policy for this site does not allow access from the specified Origin.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+  })
+);
+
 app.use(
   cors({
     origin:
@@ -37,15 +57,15 @@ app.get("/", (req, res) => {
   res.send("ai_chatbot_project API is running !");
 });
 
-app.get("/test-db", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT NOW()");
-    res.json({ success: true, time: result.rows[0].now });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
+// app.get("/test-db", async (req, res) => {
+//   try {
+//     const result = await pool.query("SELECT NOW()");
+//     res.json({ success: true, time: result.rows[0].now });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ success: false, error: err.message });
+//   }
+// });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
