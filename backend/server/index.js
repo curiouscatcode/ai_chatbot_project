@@ -3,24 +3,24 @@ const express = require("express");
 const app = express();
 const pool = require("./db");
 const cors = require("cors");
-// app.use(cors());
+app.use(cors());
 
-const allowedOrigins = ["https://relaxed-salamander-50b4a5.netlify.app"];
+// const allowedOrigins = ["https://relaxed-salamander-50b4a5.netlify.app"];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow Postman / server requests
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg =
-          "The CORS policy for this site does not allow access from the specified Origin.";
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin) return callback(null, true); // allow Postman / server requests
+//       if (allowedOrigins.indexOf(origin) === -1) {
+//         const msg =
+//           "The CORS policy for this site does not allow access from the specified Origin.";
+//         return callback(new Error(msg), false);
+//       }
+//       return callback(null, true);
+//     },
+//     credentials: true,
+//   })
+// );
 
 // app.use(
 //   cors({
