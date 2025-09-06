@@ -17,7 +17,7 @@ const ProtectedRoute = () => {
       // If a token exists, validate it with the backend
       try {
         const response = await fetch(
-          "https://ai-chatbot-project-3.onrender.com/auth/dashboard",
+          "https://ai-chatbot-project-new-deployment-4.onrender.com/auth/dashboard",
           {
             method: "GET", // Use GET for simply checking status/fetching dashboard data
             headers: {

@@ -72,7 +72,7 @@ const Dashboard = () => {
 
     try {
       const response = await fetch(
-        `https://ai-chatbot-project-3.onrender.com/auth/chats/${selectedChatForMenu.id}`,
+        `https://ai-chatbot-project-new-deployment-4.onrender.com/auth/chats/${selectedChatForMenu.id}`,
         {
           method: "PUT",
           headers: {
@@ -124,7 +124,7 @@ const Dashboard = () => {
       setError(null);
       setMessages([]);
       const res = await fetch(
-        `https://ai-chatbot-project-3.onrender.com/auth/chats/${chatId}/messages`,
+        `https://ai-chatbot-project-new-deployment-4.onrender.com/auth/chats/${chatId}/messages`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -147,7 +147,7 @@ const Dashboard = () => {
     const fetchAllChatsAndSetInitial = async () => {
       try {
         const res = await fetch(
-          "https://ai-chatbot-project-3.onrender.com/auth/chats",
+          "https://ai-chatbot-project-new-deployment-4.onrender.com/auth/chats",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -184,7 +184,7 @@ const Dashboard = () => {
       setError(null);
       setIsLoading(true);
       const res = await fetch(
-        "https://ai-chatbot-project-3.onrender.com/auth/chat/new",
+        "https://ai-chatbot-project-new-deployment-4.onrender.com/auth/chat/new",
         {
           method: "POST",
           headers: {
@@ -230,7 +230,7 @@ const Dashboard = () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        "https://ai-chatbot-project-3.onrender.com/auth/chat",
+        "https://ai-chatbot-project-new-deployment-4.onrender.com/auth/chat",
         {
           method: "POST",
           headers: {
@@ -296,7 +296,7 @@ const Dashboard = () => {
 
     try {
       const response = await fetch(
-        `https://ai-chatbot-project-3.onrender.com/auth/chats/${selectedChatForMenu.id}`,
+        `https://ai-chatbot-project-new-deployment-4.onrender.com/auth/chats/${selectedChatForMenu.id}`,
         {
           method: "DELETE",
           headers: {
