@@ -3,3 +3,6 @@ It has mobile responsivensss but it works best on laptop or desktop.
 Thirdly, i am open to changes suggestions like design sense, edge cases, or something that i don't know. Feel free to suggest. 
 
 Link:- https://684d4ae8f9b8ab379ab05064--relaxed-salamander-50b4a5.netlify.app/
+
+The current chat interface looks like this:- 
+<img width="959" height="442" alt="image" src="https://github.com/user-attachments/assets/a05f7f62-6fc0-45e2-9ae3-afe1fa4728e9" />
